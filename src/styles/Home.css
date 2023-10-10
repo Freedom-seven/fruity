@@ -1,0 +1,243 @@
+/* Home.css */
+
+/* General styles for the entire page */
+.home-container {
+  font-family: Arial, sans-serif;
+  padding: 80px 20px 20px; /* Add top padding to push content below the header */
+  background-color: var(
+    --background-light
+  ); /* Use variable for background color */
+  color: var(--text-light); /* Use variable for text color */
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out; /* Transition for mode change */
+}
+
+.dark-mode {
+  /* Global dark mode styles */
+  background-color: var(--background-dark);
+  color: var(--text-dark);
+  /* Add any other global dark mode styles here */
+}
+
+/* Specific styles for elements that change appearance in dark mode */
+.dark-mode .home-container {
+  /* Dark mode styles for .home-container */
+  background-color: var(--background-dark);
+  color: var(--text-dark);
+  /* Add any other dark mode styles for .home-container here */
+}
+
+/* Carousel Container */
+.carousel {
+  position: relative;
+  width: 100%;
+  max-height: 600px;
+  overflow: hidden;
+  background-color: var(
+    --background-light
+  ); /* Use variable for background color */
+}
+
+/* Apply dark mode styles when the dark-mode class is present */
+.dark-mode .carousel {
+  background-color: var(--background-dark);
+}
+
+/* Carousel Slides */
+.carousel .slide {
+  position: relative;
+  text-align: center;
+}
+
+/* Carousel Images */
+.carousel img {
+  max-width: 100%; /* Limit image width to its container */
+  max-height: 400px; /* Limit image height */
+  width: auto;
+  height: auto;
+  object-fit: contain; /* Maintain aspect ratio while fitting the image */
+}
+
+/* Carousel Legends (Text Overlay) */
+.carousel .legend {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* Background color for text overlay */
+  color: #fff; /* Text color */
+  padding: 20px;
+  text-align: left;
+  opacity: 0; /* Initially hide the legends */
+  transition: opacity 0.3s ease-in-out;
+  max-width: 80%; /* Set a maximum width for the legend */
+  margin: 0 auto; /* Center the legend horizontally */
+}
+
+/* Show Legends on Hover */
+.carousel:hover .legend {
+  opacity: 1;
+}
+
+/* Legend Headings */
+.carousel .legend h2 {
+  font-size: 24px;
+  margin: 0 0 10px;
+}
+
+/* Legend Paragraphs */
+.carousel .legend p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Featured Products Section styles */
+.featured-products {
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: var(
+    --background-light
+  ); /* Use variable for background color */
+}
+
+/* Apply dark mode styles when the dark-mode class is present */
+.dark-mode .featured-products {
+  background-color: var(--background-dark);
+}
+
+.featured-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Promotional Banners styles */
+.promotional-banners {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  background-color: var(
+    --background-light
+  ); /* Use variable for background color */
+}
+
+/* Apply dark mode styles when the dark-mode class is present */
+.dark-mode .promotional-banners {
+  background-color: var(--background-dark);
+}
+
+/* Promotional Banners Title */
+.promotional-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.banner {
+  position: relative;
+  flex: 1;
+  flex-basis: 200;
+  margin-right: 10px;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.banner img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.banner .promo4 {
+  height: 90%;
+}
+
+.banner-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8); /* Background color for text overlay */
+  padding: 20px;
+  color: #fff; /* Text color */
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Show banner content on hover */
+.banner:hover .banner-content {
+  background-color: rgba(0, 0, 0, 0.6); /* Adjust background color on hover */
+}
+
+.banner-content h2 {
+  font-size: 20px;
+  margin: 0 0 10px;
+  font-weight: bold;
+}
+
+.banner-content p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* CTA Button styles */
+.cta-button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 10px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #ff7f50; /* Button background color */
+  color: #fff; /* Button text color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.cta-button:hover {
+  background-color: #ff6347; /* Adjust button background color on hover */
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+  .hero-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-content {
+    margin-bottom: 20px;
+  }
+
+  .hero-image {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .featured-products {
+    padding: 10px;
+  }
+
+  .product-list {
+    grid-template-columns: 1fr;
+  }
+
+  .promotional-banners {
+    flex-direction: column;
+  }
+
+  .banner {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}

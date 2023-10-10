@@ -1,0 +1,218 @@
+/* Header.css */
+
+/* Common styles for both light and dark modes */
+.header {
+  background: var(--background-light);
+  backdrop-filter: var(--blur);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: background-color 0.3s, backdrop-filter 0.3s, color 0.3s; /* Include color transition */
+  color: var(--text-light);
+}
+
+/* Style for the dark and light mode button */
+.mode-toggle {
+  cursor: pointer;
+  font-size: 24px;
+  color: #333;
+  transition: color 0.3s ease-in-out;
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Change the color for dark mode */
+.mode-toggle.dark-mode {
+  color: #fff;
+}
+
+/* Hover effect */
+.mode-toggle:hover {
+  transform: scale(1.1);
+}
+
+.glass-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+/* For light mode */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #333; /* Text color */
+}
+
+.logo img {
+  width: 40px; /* Adjust the width as needed */
+  height: 40px; /* Adjust the height as needed */
+  /* Add any other styles for your logo image here */
+}
+
+.right-items {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.right-items.icon.dark-mode {
+  color: #fff;
+}
+
+.search-bar {
+  display: flex;
+  gap: 10px;
+}
+
+.search-bar input[type="text"] {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-light); /* Update text color */
+}
+
+/* Style the search icon */
+.search-bar .search-toggle {
+  cursor: pointer;
+  font-size: 20px;
+  color: #333;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Rotate the search icon when the input is visible */
+.search-bar .search-toggle.hidden {
+  transform: rotate(180deg);
+}
+
+/* Show the search input when it's visible */
+.search-bar input[type="text"].visible {
+  display: block;
+  width: 200px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  margin-right: 10px;
+  color: #fff; /* Text color for search input in dark mode */
+}
+
+/* CSS for the search results */
+.search-results {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  width: 300px;
+  background: var(--background-light);
+  backdrop-filter: var(--blur);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  color: var(--text-light); /* Text color for search results in dark mode */
+}
+
+.search-results ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-results ul li {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.search-results ul li:last-child {
+  border-bottom: none;
+}
+
+.search-results a {
+  text-decoration: none;
+  color: var(--text-light);
+  padding: 5px;
+  display: block;
+  transition: background 0.3s ease;
+}
+
+.search-results a:hover {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+}
+
+/* Cart icon styles */
+.cart-icon {
+  position: relative;
+}
+
+.cart-icon a {
+  text-decoration: none;
+  color: #333;
+  font-size: 24px;
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff6347;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 5px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Hover effects */
+.nav ul li:hover a {
+  color: #007bff;
+}
+
+.header.dark-mode .cart-icon a,
+.header.dark-mode .search-toggle,
+.header.dark-mode .mode-toggle {
+  color: #bebebe; /* Desired color for these elements in dark mode */
+}
+
+/* Dark mode styles for the header */
+.header.dark-mode {
+  background: var(--background-dark-header); /* Dark mode background color */
+  color: var(--text-dark); /* Dark mode text color */
+  transition: background-color 0.3s, color 0.3s, backdrop-filter 0.3s;
+}
+
+/* Dark mode styles for the search input */
+.header.dark-mode .search-bar input[type="text"] {
+  color: #fff; /* Text color for dark mode */
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .header {
+    height: 60px;
+  }
+
+  .glass-container {
+    padding: 10px;
+  }
+
+  .search-bar input[type="text"] {
+    width: 100%;
+  }
+
+  /* Adjust cart icon size for mobile */
+  .cart-icon a {
+    font-size: 20px;
+  }
+}

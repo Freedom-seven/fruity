@@ -1,0 +1,145 @@
+/* Signup.css */
+.signup-container {
+  background-image: url("../assets/fruit1.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.signup {
+  backdrop-filter: blur(10px); /* Apply a blur effect to create glassmorphism */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* Background color with transparency */
+  border-radius: 10px; /* Rounded corners for the signup container */
+  padding: 40px; /* Increased padding for spacing */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow for the glassmorphism effect */
+  width: 80%; /* Adjust the width as needed */
+  max-width: 400px; /* Maximum width for responsiveness */
+  text-align: center; /* Center-align content */
+}
+
+.signup-heading {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-label {
+  display: block;
+  font-weight: bold;
+  color: #000000;
+  text-align: start;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  outline: none;
+  caret-color: #000000; /* Style the cursor color */
+  color: #000;
+  transition: background-color 0.3s;
+}
+
+.form-input::placeholder {
+  color: #7a7a7a; /* Adjust the color to your preference */
+}
+
+.form-input:focus::placeholder {
+  color: transparent; /* Hide the placeholder when input is focused */
+}
+
+/* Style the cursor when input is active */
+.form-input:focus {
+  background-color: rgba(255, 255, 255, 0.3);
+  caret-color: #000000;
+}
+
+.error-message {
+  color: #ff3b47;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* Signup.css */
+.signup-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #ffffff;
+  text-align: center;
+  z-index: 1;
+}
+
+.signup-button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -30px; /* Initially position the fruit outside the button */
+  width: 70px; /* Adjust the width of the fruit */
+  height: 60px; /* Adjust the height of the fruit */
+  background-image: url("../assets/button-fruit.svg"); /* Replace with your fruit image */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left center;
+  z-index: 1;
+  transition: left 0.9s ease-in-out, opacity 0.5s ease-in-out; /* Transition for fruit movement and disappearance */
+}
+
+.signup-button:hover {
+  background-color: rgba(
+    0,
+    123,
+    255,
+    0.8
+  ); /* Change the background color on hover */
+  transition-delay: 0.3s;
+}
+
+.signup-button:hover:before {
+  left: 90%; /* Move the fruit to the right inside the button on hover */
+  opacity: 0.3; /* Make the fruit disappear */
+}
+
+.login-link {
+  color: #fff;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.login-anchor {
+  color: #007bff;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+.login-anchor:hover {
+  text-decoration: underline;
+}

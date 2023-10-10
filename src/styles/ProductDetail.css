@@ -1,0 +1,100 @@
+/* ProductDetail.css */
+
+/* Common styles for both light and dark modes */
+.product-detail-container {
+  padding: 20px;
+  border-radius: 10px;
+  transition: background-color 0.3s, color 0.3s;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff; /* Default background color for light mode */
+  color: #333; /* Default text color for light mode */
+}
+
+.product-detail-container.dark-mode {
+  background-color: #333; /* Background color for dark mode */
+  color: #fff; /* Text color for dark mode */
+}
+
+.product-image-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.product-image {
+  max-width: 60%;
+  height: 50%;
+  border-radius: 5px;
+}
+
+.product-name {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.product-price {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.product-description {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.product-variations ul {
+  list-style: none;
+  padding: 0;
+}
+
+.product-variations ul li {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.add-to-cart-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  padding: 10px 20px;
+  cursor: pointer;
+  outline: none;
+  margin-top: 20px;
+}
+
+.add-to-cart-button.added {
+  background-color: #dc3545;
+}
+
+.add-to-cart-button:hover {
+  background-color: #0056b3;
+}
+
+/* Dark mode specific styles */
+.product-detail-container.dark-mode {
+  background-color: #333; /* Background color for dark mode */
+  color: #fff; /* Text color for dark mode */
+}
+
+.product-name.dark-mode-text,
+.product-price.dark-mode-text,
+.product-description.dark-mode-text,
+.product-variations.dark-mode-text,
+.add-to-cart-button.dark-mode-button {
+  color: #fff; /* Text color for dark mode */
+}
+
+/* Light mode specific styles */
+.product-detail-container.light-mode {
+  background-color: #fff; /* Background color for light mode */
+  color: #333; /* Text color for light mode */
+}
+
+.product-name.light-mode-text,
+.product-price.light-mode-text,
+.product-description.light-mode-text,
+.product-variations.light-mode-text,
+.add-to-cart-button.light-mode-button {
+  color: #333; /* Text color for light mode */
+}

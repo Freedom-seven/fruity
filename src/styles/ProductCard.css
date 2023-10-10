@@ -1,0 +1,147 @@
+/* ProductCard.css */
+
+/* Common styles for both light and dark modes */
+.product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px;
+  transition: transform 0.3s ease-in-out;
+  overflow: hidden;
+  margin: 10px;
+  min-width: 250px; /* Minimum width for responsiveness */
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Border on hover */
+}
+
+.product-image {
+  max-width: 60%;
+  height: 50%;
+  margin-bottom: 10px;
+}
+
+.product-name {
+  font-size: 18px;
+  margin: 5px 0;
+}
+
+.product-price {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.quantity-button {
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  padding: 0 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+#quantity {
+  font-size: 18px;
+  width: 40px;
+  text-align: center;
+  border: none;
+  outline: none;
+  margin: 0 10px;
+  background-color: transparent;
+  color: #fff;
+}
+
+.add-to-cart-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+  outline: none;
+  margin-top: 10px;
+}
+
+.add-to-cart-button.added {
+  background-color: #dc3545;
+}
+
+.add-to-cart-button:hover {
+  background-color: #0056b3;
+}
+
+/* Prevent expansion of other item boxes */
+.product-card.expanded {
+  height: auto;
+}
+
+/* Light Mode Styles */
+.product-card.light-mode {
+  background: rgba(255, 255, 255, 0.2); /* Glassmorphism effect */
+  backdrop-filter: blur(3px); /* Glassmorphism effect */
+  border: 1px solid transparent;
+  color: #333; /* Text color */
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2); /* Box shadow in light mode */
+}
+
+.product-card.light-mode:hover {
+  border: 1px solid rgba(0, 0, 0, 0.2); /* Border on hover in light mode */
+}
+
+.product-name.light-mode {
+  color: #333; /* Text color in light mode */
+}
+
+.product-price.light-mode {
+  color: #000000; /* Price color in light mode */
+}
+
+/* Dark Mode Styles */
+.product-card.dark-mode {
+  background: rgba(0, 0, 0, 0.2); /* Dark mode background */
+  color: #fff; /* Text color in dark mode */
+  border: 1px solid transparent;
+  box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.2); /* Box shadow in dark mode */
+}
+
+.product-card.dark-mode:hover {
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Border on hover in dark mode */
+}
+
+.product-name.dark-mode {
+  color: #fff; /* Text color in dark mode */
+}
+
+.product-price.dark-mode {
+  color: #00bfff; /* Price color in dark mode */
+}
+
+/* Styles for the quantity input and buttons in dark mode */
+.product-card.dark-mode .quantity-button,
+.product-card.dark-mode #quantity {
+  color: #fff; /* Text color for dark mode */
+}
+
+/* Styles for the quantity input and buttons in light mode */
+.product-card.light-mode .quantity-button,
+.product-card.light-mode #quantity {
+  color: #333; /* Text color for light mode */
+}
+
+@media screen and (max-width: 768px) {
+  .product-card {
+    min-width: auto; /* Adjust minimum width for smaller screens */
+  }
+}
