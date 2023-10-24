@@ -11,13 +11,6 @@
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out; /* Transition for mode change */
 }
 
-.dark-mode {
-  /* Global dark mode styles */
-  background-color: var(--background-dark);
-  color: var(--text-dark);
-  /* Add any other global dark mode styles here */
-}
-
 /* Specific styles for elements that change appearance in dark mode */
 .dark-mode .home-container {
   /* Dark mode styles for .home-container */

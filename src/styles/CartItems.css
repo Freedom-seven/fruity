@@ -1,17 +1,13 @@
 /* CartItems.css */
-
-/* Container for CartItems */
-.cart-container.with-background-blur {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-}
-
 .cart-container {
   position: absolute; /* Set it to absolute position */
   top: 60px; /* Position it below the header */
   right: 0px; /* Adjust right position as needed */
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px); /* Add backdrop-filter for blur effect */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 12px;
+  border: 1px solid rgba(209, 213, 219, 0.3);
   padding: 0 30px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -30,8 +26,9 @@
   position: absolute; /* Set it to absolute position */
   top: 60px; /* Position it below the header */
   right: 0px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px); /* Add backdrop-filter for blur effect */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.75);
   padding: 0 30px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -94,19 +91,52 @@
 
 .cart-item-price {
   font-size: 16px;
-  color: #ffffff;
+  color: var(--text-color); /* Use text color variable */
   white-space: nowrap;
 }
 
 .cart-item-quantity {
   font-size: 14px;
-  color: #ffffff;
+  color: var(--text-color); /* Use text color variable */
 }
 
 .cart-item-total {
   font-size: 16px;
   font-weight: bold;
-  color: #ffffff;
+  color: var(--text-color); /* Use text color variable */
+}
+
+/* Add these styles for the remove buttons */
+.remove-item-button {
+  background-color: transparent; /* Red background color */
+  color: var(--text-color); /* White text color */
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px; /* Adjust padding as needed */
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.remove-item-button:hover {
+  background-color: #cc0000; /* Darker red on hover */
+}
+
+/* Style for the "Remove All" button */
+.remove-all-button {
+  background-color: transparent; /* Red background color */
+  color: var(--text-color); /* White text color */
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px; /* Adjust padding as needed */
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.remove-all-button:hover {
+  background-color: #cc0000; /* Darker red on hover */
 }
 
 /* Cart summary */
@@ -130,5 +160,88 @@
 }
 
 .checkout-button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Dark Mode Styles */
+.dark-mode .cart-container {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.75);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  color: var(--text-dark); /* Dark mode text color */
+  transition: background-color 0.3s, color 0.3s, backdrop-filter 0.3s;
+}
+
+.dark-mode .cart-empty {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(17, 25, 40, 0.75);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  color: var(--text-dark); /* Dark mode text color */
+  transition: background-color 0.3s, color 0.3s, backdrop-filter 0.3s;
+}
+
+.dark-mode .cart-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .cart-item-price,
+.dark-mode .cart-item-quantity,
+.dark-mode .cart-item-total {
+  color: var(--text-dark);
+}
+
+.dark-mode .remove-item-button,
+.dark-mode .remove-all-button {
+  color: var(--text-dark);
+  background-color: transparent;
+}
+
+.dark-mode .remove-item-button:hover,
+.dark-mode .remove-all-button:hover {
+  background-color: #cc0000;
+}
+
+/* Default Styles for Small Screens */
+@media (max-width: 768px) {
+  .cart-container {
+    /* Adjust styles for small screens */
+    max-height: 80vh;
+    right: 0;
+    left: 0;
+    border-radius: 0;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .cart-empty {
+    /* Adjust styles for small screens */
+    max-height: 80vh;
+    right: 0;
+    left: 0;
+    border-radius: 0;
+    padding: 20px;
+    background: var(--background-color);
+    backdrop-filter: var(--blur);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .cart-item {
+    /* Adjust styles for small screens */
+    padding: 15px 0;
+  }
+
+  .cart-item-name {
+    /* Modify font size for the item name on small screens */
+    font-size: 14px;
+  }
+
+  .cart-item-price {
+    /* Modify font size for the item price on small screens */
+    font-size: 14px;
+  }
 }
