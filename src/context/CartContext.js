@@ -1,35 +1,43 @@
 import React, {
   createContext,
-  useState,
   useContext,
+  useState,
   useEffect,
   useReducer,
+  useCallback,
 } from "react";
+import { useAuth } from ".";
 
-// Create the CartContext
 const CartContext = createContext();
 const CartDispatchContext = createContext();
 
-// Create actions for managing the cart
 const ADD_TO_CART = "ADD_TO_CART";
 const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 const UPDATE_QUANTITY = "UPDATE_QUANTITY";
 const REMOVE_ALL_ITEMS = "REMOVE_ALL_ITEMS";
 
-// Create the CartProvider component
 export function CartProvider({ children }) {
-  // Load the cart from localStorage or initialize an empty cart
-  const [cart, setCart] = useState(
-    JSON.parse(localStorage.getItem("cart")) || []
+  const { isAuthenticated, user } = useAuth();
+
+  // Determine the storage key based on the user's authentication status
+  const storageKey = isAuthenticated
+    ? `cart_${user.id}`
+    : "cart_unauthenticated";
+
+  // Load the user's cart from localStorage or initialize an empty cart
+  const [userCart, setUserCart] = useState(() => {
+    const cartData = localStorage.getItem(storageKey);
+    return cartData ? JSON.parse(cartData) : [];
+  });
+
+  const updateUserCart = useCallback(
+    (newCart) => {
+      setUserCart(newCart);
+      localStorage.setItem(storageKey, JSON.stringify(newCart));
+    },
+    [storageKey]
   );
 
-  // Function to update cart state and localStorage
-  const updateCart = (newCart) => {
-    setCart(newCart);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-  };
-
-  // Reducer function to manage cart actions
   const cartReducer = (state, action) => {
     switch (action.type) {
       case ADD_TO_CART:
@@ -41,11 +49,11 @@ export function CartProvider({ children }) {
         if (existingProductIndex !== -1) {
           const updatedCart = [...state];
           updatedCart[existingProductIndex].quantity += quantity;
-          updateCart(updatedCart); // Update cart state
+          updateUserCart(updatedCart);
           return updatedCart;
         } else {
           const updatedCart = [...state, { product, quantity }];
-          updateCart(updatedCart); // Update cart state
+          updateUserCart(updatedCart);
           return updatedCart;
         }
 
@@ -54,7 +62,7 @@ export function CartProvider({ children }) {
         const updatedCart = state.filter(
           (item) => item.product.id !== productId
         );
-        updateCart(updatedCart); // Update cart state
+        updateUserCart(updatedCart);
         return updatedCart;
 
       case UPDATE_QUANTITY:
@@ -65,12 +73,12 @@ export function CartProvider({ children }) {
           }
           return item;
         });
-        updateCart(updatedCartQuantity); // Update cart state
+        updateUserCart(updatedCartQuantity);
         return updatedCartQuantity;
 
       case REMOVE_ALL_ITEMS:
         const emptyCart = [];
-        updateCart(emptyCart); // Update cart state
+        updateUserCart(emptyCart);
         return emptyCart;
 
       default:
@@ -78,34 +86,41 @@ export function CartProvider({ children }) {
     }
   };
 
-  const [state, dispatch] = useReducer(cartReducer, cart);
+  const [state, dispatch] = useReducer(cartReducer, userCart);
 
-  // Clear the cart in localStorage when the cart state is cleared
   useEffect(() => {
-    if (cart.length === 0) {
-      localStorage.removeItem("cart");
+    if (userCart.length === 0 && user && isAuthenticated) {
+      localStorage.removeItem(storageKey);
     }
-  }, [cart]);
+  }, [userCart, user, isAuthenticated, storageKey]);
 
-  // Function to add a product to the cart
-  const addToCart = (product, quantity) => {
-    dispatch({ type: ADD_TO_CART, payload: { product, quantity } });
-  };
+  // const addToCart = (product, quantity) => {
+  //   if (!isAuthenticated) {
+  //     return;
+  //   }
+  //   dispatch({ type: ADD_TO_CART, payload: { product, quantity } });
+  // };
 
-  // Function to remove a product from the cart
-  const removeFromCart = (productId) => {
-    dispatch({ type: REMOVE_FROM_CART, payload: productId });
-  };
+  // const removeFromCart = (productId) => {
+  //   if (!isAuthenticated) {
+  //     return;
+  //   }
+  //   dispatch({ type: REMOVE_FROM_CART, payload: productId });
+  // };
 
-  // Function to update the quantity of a product in the cart
-  const updateQuantity = (productId, newQuantity) => {
-    dispatch({ type: UPDATE_QUANTITY, payload: { productId, newQuantity } });
-  };
+  // const updateQuantity = (productId, newQuantity) => {
+  //   if (!isAuthenticated) {
+  //     return;
+  //   }
+  //   dispatch({ type: UPDATE_QUANTITY, payload: { productId, newQuantity } });
+  // };
 
-  // Function to remove all items from the cart
-  const removeAllItems = () => {
-    dispatch({ type: REMOVE_ALL_ITEMS });
-  };
+  // const removeAllItems = () => {
+  //   if (!isAuthenticated) {
+  //     return;
+  //   }
+  //   dispatch({ type: REMOVE_ALL_ITEMS });
+  // };
 
   return (
     <CartContext.Provider value={{ cart: state }}>
@@ -116,12 +131,10 @@ export function CartProvider({ children }) {
   );
 }
 
-// Create a custom hook for using the CartContext
 export function useCart() {
   return useContext(CartContext);
 }
 
-// Create a custom hook for using cart dispatch
 export function useCartDispatch() {
   return useContext(CartDispatchContext);
 }

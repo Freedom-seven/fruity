@@ -1,4 +1,5 @@
 // Import your product images here
+
 import {
   apple,
   strawberry,

@@ -1,9 +1,7 @@
 import React from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Header from "./common/Header";
-import ProductCard from "./common/ProductCard";
-
+import { Header, ProductCard, Footer } from ".";
 import { useProducts, useTheme } from "../context";
 
 import "../styles/Home.css";
@@ -124,6 +122,7 @@ function Home() {
           ))}
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

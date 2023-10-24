@@ -27,6 +27,7 @@ import carousel3 from "./carousel3.png";
 import carousel4 from "./carousel4.png";
 import carousel5 from "./carousel5.png";
 import logo from "./logo.png";
+import cards from "./credit-card-logos.png";
 
 export {
   apple,
@@ -58,4 +59,5 @@ export {
   kiwi,
   pear,
   logo,
+  cards,
 };

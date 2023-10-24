@@ -18,12 +18,14 @@
 .light-mode {
   --background-color: var(--background-light);
   --text-color: var(--text-light);
+  --blur: blur(10px);
 }
 
 /* Dark Mode Styles */
 .dark-mode {
   --background-color: var(--background-dark);
   --text-color: var(--text-dark);
+  --blur: blur(10px);
 }
 
 * {

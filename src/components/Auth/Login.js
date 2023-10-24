@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // Import useHistory for navigation
-import { authService } from "../../services"; // Import your authentication service
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../../context";
 
 import "../../styles/Login.css";
 
@@ -9,13 +9,14 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth(); // Use the login function from AuthProvider
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      // Call your authentication service to perform the login
-      const user = await authService.login(email, password);
+      // Call the login function from AuthProvider
+      const user = await login(email, password);
 
       // If login is successful, redirect to a protected route (e.g., user dashboard)
       if (user) {
@@ -40,6 +41,7 @@ function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="current-email"
             />
           </div>
           <div className="form-group">
@@ -51,6 +53,7 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete="current-password"
             />
           </div>
           {error && <p className="error-message">{error}</p>}

@@ -1,123 +1,240 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { useProducts, useTheme } from "../../context";
+import { useProducts, useTheme, useCart, useCartDispatch } from "../../context";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import "../../styles/ProductDetail.css";
+import { Footer, Header, ProductCard } from ".."; // Import ProductCard or any component to display related products
 
 function ProductDetail() {
   const { productId } = useParams();
   const products = useProducts();
-  const { isDarkMode } = useTheme(); // Access the dark mode state
+  const { isDarkMode } = useTheme(); // Get the current theme
+  const cartContext = useCart();
+  const cartDispatch = useCartDispatch();
 
-  // Check if the products array is defined and not empty
-  if (!products || products.length === 0) {
-    console.log("Products array is empty or undefined.");
-    return <div>Product not found</div>;
+  const [isAddedToCart, setAddedToCart] = useState(false);
+  const [quantity, setQuantity] = useState(0);
+  const [product, setProduct] = useState(null);
+
+  const checkIfInCart = useCallback(() => {
+    return (
+      product && cartContext.cart.some((item) => item.product.id === product.id)
+    );
+  }, [cartContext.cart, product]);
+
+  useEffect(() => {
+    const currentProduct = products.find((p) => p.id === parseInt(productId));
+
+    if (!currentProduct) {
+      console.log(`Product with ID ${productId} not found.`);
+      console.log("Products:", products);
+      return;
+    }
+
+    setProduct(currentProduct);
+
+    const isInCart = checkIfInCart();
+    setAddedToCart(isInCart);
+
+    if (isInCart) {
+      const cartItem = cartContext.cart.find(
+        (item) => item.product.id === currentProduct.id
+      );
+      setQuantity(cartItem.quantity);
+    }
+  }, [productId, products, checkIfInCart, cartContext.cart]);
+
+  // Check if the product is still loading
+  if (product === null) {
+    return <div className="loading-container">Loading...</div>;
   }
 
-  // Find the product by ID
-  const product = products.find((p) => p.id === parseInt(productId));
-
+  // Check if the product is not found
   if (!product) {
-    // Handle product not found
-    console.log(`Product with ID ${productId} not found.`);
-    console.log("Products:", products);
-    return <div>Product not found</div>;
+    return <div className="not-found-message">Product not found.</div>;
   }
 
-  console.log("Product:", product); // Log the product details for debugging
+  const handleAddToCart = () => {
+    if (!isAddedToCart) {
+      cartDispatch({ type: "ADD_TO_CART", payload: { product, quantity: 1 } });
+      setAddedToCart(true);
+      setQuantity(1);
+    } else {
+      setAddedToCart(false);
+      setQuantity(0);
+      cartDispatch({ type: "REMOVE_FROM_CART", payload: product.id });
+    }
+  };
+
+  const handleQuantityChange = (event) => {
+    const newQuantity = Number(event.target.value);
+    setQuantity(newQuantity);
+    if (isAddedToCart) {
+      if (newQuantity === 0) {
+        cartDispatch({ type: "REMOVE_FROM_CART", payload: product.id });
+      } else {
+        cartDispatch({
+          type: "UPDATE_QUANTITY",
+          payload: { productId: product.id, newQuantity },
+        });
+      }
+    }
+  };
+
+  // Filter related products based on the category of the current product
+  const relatedProducts = products.filter(
+    (relatedProduct) =>
+      relatedProduct.category === product.category &&
+      relatedProduct.id !== product.id
+  );
 
   return (
-    <div
-      className={`product-detail-container ${
-        isDarkMode ? "dark-mode" : "light-mode"
-      }`}
-    >
-      <div className="product-image-container">
-        <img src={product.image} alt={product.name} className="product-image" />
-      </div>
-      <div className="product-details">
-        <h2
-          className={`product-name ${
-            isDarkMode ? "dark-mode-text" : "light-mode-text"
+    <div className="product-detail">
+      <Header />
+      <div
+        className={`product-detail-container ${
+          isDarkMode ? "dark-mode" : "light-mode"
+        }`}
+      >
+        <div className="product-image-container">
+          <div className="image-container">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="search-image"
+            />
+          </div>
+        </div>
+        <div
+          className={`product-details ${
+            isDarkMode ? "dark-mode" : "light-mode"
           }`}
         >
-          {product.name}
-        </h2>
-        <p
-          className={`product-price ${
-            isDarkMode ? "dark-mode-text" : "light-mode-text"
-          }`}
-        >
-          ${product.price}
-        </p>
-        <p
-          className={`product-description ${
-            isDarkMode ? "dark-mode-text" : "light-mode-text"
-          }`}
-        >
-          {product.description}
-        </p>
-
-        {/* Product Variations */}
-        {product.variations && (
-          <div
-            className={`product-variations ${
+          <h2
+            className={`product-names ${
               isDarkMode ? "dark-mode-text" : "light-mode-text"
             }`}
           >
-            <h3>Variations:</h3>
-            <ul>
-              {product.variations.map((variation) => (
-                <li key={variation.id}>{variation.name}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+            {product.name}
+          </h2>
+          <p
+            className={`product-price ${
+              isDarkMode ? "dark-mode-text" : "light-mode-text"
+            }`}
+          >
+            ${product.price}
+          </p>
+          {product.description && (
+            <p
+              className={`product-description ${
+                isDarkMode ? "dark-mode-text" : "light-mode-text"
+              }`}
+            >
+              {product.description}
+            </p>
+          )}
 
-        {/* Add to Cart Button */}
-        <button
-          className={`add-to-cart-button ${
-            isDarkMode ? "dark-mode-button" : "light-mode-button"
-          }`}
-        >
-          Add to Cart
-        </button>
+          {product.variations && product.variations.length > 0 && (
+            <div
+              className={`product-variations ${
+                isDarkMode ? "dark-mode-text" : "light-mode-text"
+              }`}
+            >
+              <h3>Variations:</h3>
+              <ul>
+                {product.variations.map((variation) => (
+                  <li key={variation.id}>{variation.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {product.weight && (
+            <p
+              className={`product-description ${
+                isDarkMode ? "dark-mode-text" : "light-mode-text"
+              }`}
+            >
+              Weight: {product.weight} grams
+            </p>
+          )}
+
+          {quantity > 0 && (
+            <div className="quantity-selector">
+              <button
+                className="quantity-button"
+                onClick={() => {
+                  if (quantity > 1) {
+                    setQuantity(quantity - 1);
+                    cartDispatch({
+                      type: "UPDATE_QUANTITY",
+                      payload: {
+                        productId: product.id,
+                        newQuantity: quantity - 1,
+                      },
+                    });
+                  }
+                }}
+              >
+                <FontAwesomeIcon icon={faMinus} />
+              </button>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                value={quantity}
+                onChange={handleQuantityChange}
+              />
+              <button
+                className="quantity-button"
+                onClick={() => {
+                  setQuantity(quantity + 1);
+                  cartDispatch({
+                    type: "UPDATE_QUANTITY",
+                    payload: {
+                      productId: product.id,
+                      newQuantity: quantity + 1,
+                    },
+                  });
+                }}
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </button>
+            </div>
+          )}
+          <button
+            onClick={handleAddToCart}
+            className={`add-to-cart-button ${isAddedToCart ? "added" : ""}`}
+          >
+            {isAddedToCart ? (
+              <span>
+                <FontAwesomeIcon icon={faMinus} /> Remove from Cart
+              </span>
+            ) : (
+              <span>
+                <FontAwesomeIcon icon={faPlus} /> Add to Cart
+              </span>
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Product Reviews */}
-      <div
-        className={`product-reviews ${
-          isDarkMode ? "dark-mode-text" : "light-mode-text"
-        }`}
-      >
-        <h3>Product Reviews</h3>
-        {/* Display user reviews and ratings here */}
-        {/* Provide a form for users to leave reviews */}
+      {/* Related Products Section */}
+      <div className="related-products">
+        <h2>Related Products</h2>
+        <div className="related-products-container">
+          {relatedProducts.map((relatedProduct) => (
+            <ProductCard
+              key={relatedProduct.id}
+              product={relatedProduct}
+              isDarkMode={isDarkMode}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Related Products */}
-      <div
-        className={`related-products ${
-          isDarkMode ? "dark-mode-text" : "light-mode-text"
-        }`}
-      >
-        <h3>Related Products</h3>
-        {/* Display related products here */}
-      </div>
-
-      {/* Additional Information */}
-      <div
-        className={`additional-info ${
-          isDarkMode ? "dark-mode-text" : "light-mode-text"
-        }`}
-      >
-        <h3>Additional Information</h3>
-        <ul>
-          <li>Category: {product.category}</li>
-          <li>Weight: {product.weight} grams</li>
-          {/* Add more product details here */}
-        </ul>
-      </div>
+      <Footer />
     </div>
   );
 }

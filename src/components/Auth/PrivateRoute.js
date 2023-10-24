@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Link } from "react-router-dom";
+import { Route, Navigate } from "react-router-dom";
 
 // Replace this with your actual authentication logic
 const isAuthenticated = () => {
@@ -16,7 +16,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         isAuthenticated() ? (
           <Component {...props} />
         ) : (
-          <Link to="/login" /> // Redirect to the login page if not authenticated
+          <Navigate replace to="/login" /> // Redirect to the login page if not authenticated
         )
       }
     />

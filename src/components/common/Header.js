@@ -6,12 +6,12 @@ import {
   faSearch,
   faMoon,
   faSun,
+  faBars,
 } from "@fortawesome/free-solid-svg-icons";
-import { useCart, useProducts, useTheme } from "../../context";
-
+import { useCart, useProducts, useTheme, useAuth } from "../../context";
 import { logo } from "../../assets/images";
 import "../../styles/Header.css";
-import CartItems from "../Basket/CartItems";
+import { UserProfile, CartItems } from "..";
 
 function Header() {
   const { cart } = useCart();
@@ -23,6 +23,9 @@ function Header() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const { isDarkMode, toggleDarkMode } = useTheme();
   const [isCartOpen, setCartOpen] = useState(false);
+  const [isSearchResultsVisible, setSearchResultsVisible] = useState(false);
+  const { isAuthenticated } = useAuth(); // Get the authentication status and logout function
+  const [isUserProfileVisible, setUserProfileVisible] = useState(false); // State to manage user profile visibility
 
   useEffect(() => {
     const totalCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -40,12 +43,14 @@ function Header() {
     );
 
     setFilteredProducts(filtered);
+    setSearchResultsVisible(true);
   };
 
   const toggleSearchInput = () => {
     setSearchInputVisible(!isSearchInputVisible);
     if (!isSearchInputVisible) {
       setSearchQuery("");
+      setSearchResultsVisible(false);
     }
   };
 
@@ -68,13 +73,25 @@ function Header() {
 
   const toggleCart = () => {
     setCartOpen(!isCartOpen);
+    setSearchResultsVisible(false);
   };
 
-  // Close CartItems when clicked outside
+  const toggleUserProfile = () => {
+    setUserProfileVisible(!isUserProfileVisible);
+  };
+
+  const handleLogout = () => {
+    // Close the user profile when logging out
+    setUserProfileVisible(false);
+  };
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (isCartOpen && !e.target.closest(".cart-icon")) {
         setCartOpen(false);
+      }
+      if (!e.target.closest(".search-bar")) {
+        setSearchResultsVisible(false);
       }
     };
 
@@ -129,9 +146,16 @@ function Header() {
           <div className="mode-toggle" onClick={toggleDarkMode}>
             <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} />
           </div>
+          {isAuthenticated && (
+            <div className="user-icon">
+              <FontAwesomeIcon icon={faBars} onClick={toggleUserProfile} />
+              {isUserProfileVisible && <UserProfile onLogout={handleLogout} />}
+            </div>
+          )}
+          {console.log("IsAuthenticated:", isAuthenticated)}
         </div>
       </div>
-      {searchQuery && (
+      {isSearchResultsVisible && (
         <div className="search-results">
           {filteredProducts.length > 0 ? (
             <ul>
@@ -142,7 +166,7 @@ function Header() {
               ))}
             </ul>
           ) : (
-            <p>No results found</p>
+            <p className="results">No results found</p>
           )}
         </div>
       )}

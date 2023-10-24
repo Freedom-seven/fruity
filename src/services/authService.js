@@ -31,6 +31,7 @@ const authService = {
 
       // Check if the user exists and the password is correct
       if (user && user.password === password) {
+        // Return the user data
         return {
           id: user.id,
           firstName: user.firstName,
@@ -75,9 +76,18 @@ const authService = {
     }
   },
 
-  // Logout function (can be implemented as needed)
-  logout: () => {
-    // Implement logout logic here if needed
+  // Logout function
+  logout: async () => {
+    try {
+      // Simulate a delay to mimic an async operation (e.g., API request)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // You can implement logout logic here, such as clearing user sessions, tokens, or cookies.
+      // For demonstration purposes, we'll simply return a success message.
+      return "Logout successful";
+    } catch (error) {
+      throw error;
+    }
   },
 
   // Additional authentication-related functions can be added here

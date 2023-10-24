@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom"; // Import useHistory for navigation
-import { authService } from "../../services"; // Import your authentication service
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../../context";
 
 import "../../styles/Signup.css";
 
@@ -11,13 +11,14 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { signup } = useAuth(); // Use the signup function from AuthProvider
 
   const handleSignup = async (e) => {
     e.preventDefault();
 
     try {
-      // Call your authentication service to perform the signup
-      const user = await authService.signup({
+      // Call the signup function from AuthProvider
+      const user = await signup({
         firstName,
         lastName,
         email,
@@ -32,7 +33,6 @@ function Signup() {
       setError("Error creating an account. Please try again.");
     }
   };
-
   return (
     <div className="signup-container">
       <div className="signup">
