@@ -2,6 +2,7 @@ import React, {
   createContext,
   useContext,
   useState,
+  useEffect,
   useReducer,
   useCallback,
 } from "react";
@@ -16,10 +17,26 @@ const UPDATE_QUANTITY = "UPDATE_QUANTITY";
 const REMOVE_ALL_ITEMS = "REMOVE_ALL_ITEMS";
 
 export function CartProvider({ children }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
-  // Initialize the cart state
-  const [userCart, setUserCart] = useState([]);
+  // Determine the storage key based on the user's authentication status
+  const storageKey = isAuthenticated
+    ? `cart_${user.id}`
+    : "cart_unauthenticated";
+
+  // Load the user's cart from localStorage or initialize an empty cart
+  const [userCart, setUserCart] = useState(() => {
+    const cartData = localStorage.getItem(storageKey);
+    return cartData ? JSON.parse(cartData) : [];
+  });
+
+  const updateUserCart = useCallback(
+    (newCart) => {
+      setUserCart(newCart);
+      localStorage.setItem(storageKey, JSON.stringify(newCart));
+    },
+    [storageKey]
+  );
 
   const cartReducer = (state, action) => {
     switch (action.type) {
@@ -32,27 +49,37 @@ export function CartProvider({ children }) {
         if (existingProductIndex !== -1) {
           const updatedCart = [...state];
           updatedCart[existingProductIndex].quantity += quantity;
+          updateUserCart(updatedCart);
           return updatedCart;
         } else {
           const updatedCart = [...state, { product, quantity }];
+          updateUserCart(updatedCart);
           return updatedCart;
         }
 
       case REMOVE_FROM_CART:
         const productId = action.payload;
-        return state.filter((item) => item.product.id !== productId);
+        const updatedCart = state.filter(
+          (item) => item.product.id !== productId
+        );
+        updateUserCart(updatedCart);
+        return updatedCart;
 
       case UPDATE_QUANTITY:
         const { productId: id, newQuantity } = action.payload;
-        return state.map((item) => {
+        const updatedCartQuantity = state.map((item) => {
           if (item.product.id === id) {
             return { ...item, quantity: newQuantity };
           }
           return item;
         });
+        updateUserCart(updatedCartQuantity);
+        return updatedCartQuantity;
 
       case REMOVE_ALL_ITEMS:
-        return [];
+        const emptyCart = [];
+        updateUserCart(emptyCart);
+        return emptyCart;
 
       default:
         return state;
@@ -61,8 +88,39 @@ export function CartProvider({ children }) {
 
   const [state, dispatch] = useReducer(cartReducer, userCart);
 
-  // Replace updateUserCart with a no-op function to prevent saving to localStorage
-  const updateUserCart = useCallback(() => {}, []);
+  useEffect(() => {
+    if (userCart.length === 0 && user && isAuthenticated) {
+      localStorage.removeItem(storageKey);
+    }
+  }, [userCart, user, isAuthenticated, storageKey]);
+
+  // const addToCart = (product, quantity) => {
+  //   if (!isAuthenticated) {
+  //     return;
+  //   }
+  //   dispatch({ type: ADD_TO_CART, payload: { product, quantity } });
+  // };
+
+  // const removeFromCart = (productId) => {
+  //   if (!isAuthenticated) {
+  //     return;
+  //   }
+  //   dispatch({ type: REMOVE_FROM_CART, payload: productId });
+  // };
+
+  // const updateQuantity = (productId, newQuantity) => {
+  //   if (!isAuthenticated) {
+  //     return;
+  //   }
+  //   dispatch({ type: UPDATE_QUANTITY, payload: { productId, newQuantity } });
+  // };
+
+  // const removeAllItems = () => {
+  //   if (!isAuthenticated) {
+  //     return;
+  //   }
+  //   dispatch({ type: REMOVE_ALL_ITEMS });
+  // };
 
   return (
     <CartContext.Provider value={{ cart: state }}>
@@ -85,7 +143,6 @@ export function useCartDispatch() {
 //   createContext,
 //   useContext,
 //   useState,
-//   useEffect,
 //   useReducer,
 //   useCallback,
 // } from "react";
@@ -100,26 +157,9 @@ export function useCartDispatch() {
 // const REMOVE_ALL_ITEMS = "REMOVE_ALL_ITEMS";
 
 // export function CartProvider({ children }) {
-//   const { isAuthenticated, user } = useAuth();
+//   const { isAuthenticated } = useAuth();
 
-//   // Determine the storage key based on the user's authentication status
-//   const storageKey = isAuthenticated
-//     ? `cart_${user.id}`
-//     : "cart_unauthenticated";
-
-//   // Load the user's cart from localStorage or initialize an empty cart
-//   const [userCart, setUserCart] = useState(() => {
-//     const cartData = localStorage.getItem(storageKey);
-//     return cartData ? JSON.parse(cartData) : [];
-//   });
-
-//   const updateUserCart = useCallback(
-//     (newCart) => {
-//       setUserCart(newCart);
-//       localStorage.setItem(storageKey, JSON.stringify(newCart));
-//     },
-//     [storageKey]
-//   );
+//   const [userCart, setUserCart] = useState([]);
 
 //   const cartReducer = (state, action) => {
 //     switch (action.type) {
@@ -132,37 +172,27 @@ export function useCartDispatch() {
 //         if (existingProductIndex !== -1) {
 //           const updatedCart = [...state];
 //           updatedCart[existingProductIndex].quantity += quantity;
-//           updateUserCart(updatedCart);
 //           return updatedCart;
 //         } else {
 //           const updatedCart = [...state, { product, quantity }];
-//           updateUserCart(updatedCart);
 //           return updatedCart;
 //         }
 
 //       case REMOVE_FROM_CART:
 //         const productId = action.payload;
-//         const updatedCart = state.filter(
-//           (item) => item.product.id !== productId
-//         );
-//         updateUserCart(updatedCart);
-//         return updatedCart;
+//         return state.filter((item) => item.product.id !== productId);
 
 //       case UPDATE_QUANTITY:
 //         const { productId: id, newQuantity } = action.payload;
-//         const updatedCartQuantity = state.map((item) => {
+//         return state.map((item) => {
 //           if (item.product.id === id) {
 //             return { ...item, quantity: newQuantity };
 //           }
 //           return item;
 //         });
-//         updateUserCart(updatedCartQuantity);
-//         return updatedCartQuantity;
 
 //       case REMOVE_ALL_ITEMS:
-//         const emptyCart = [];
-//         updateUserCart(emptyCart);
-//         return emptyCart;
+//         return [];
 
 //       default:
 //         return state;
@@ -171,39 +201,7 @@ export function useCartDispatch() {
 
 //   const [state, dispatch] = useReducer(cartReducer, userCart);
 
-//   useEffect(() => {
-//     if (userCart.length === 0 && user && isAuthenticated) {
-//       localStorage.removeItem(storageKey);
-//     }
-//   }, [userCart, user, isAuthenticated, storageKey]);
-
-//   const addToCart = (product, quantity) => {
-//     if (!isAuthenticated) {
-//       return;
-//     }
-//     dispatch({ type: ADD_TO_CART, payload: { product, quantity } });
-//   };
-
-//   const removeFromCart = (productId) => {
-//     if (!isAuthenticated) {
-//       return;
-//     }
-//     dispatch({ type: REMOVE_FROM_CART, payload: productId });
-//   };
-
-//   const updateQuantity = (productId, newQuantity) => {
-//     if (!isAuthenticated) {
-//       return;
-//     }
-//     dispatch({ type: UPDATE_QUANTITY, payload: { productId, newQuantity } });
-//   };
-
-//   const removeAllItems = () => {
-//     if (!isAuthenticated) {
-//       return;
-//     }
-//     dispatch({ type: REMOVE_ALL_ITEMS });
-//   };
+//   const updateUserCart = useCallback(() => {}, []);
 
 //   return (
 //     <CartContext.Provider value={{ cart: state }}>
