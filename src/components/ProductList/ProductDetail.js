@@ -4,12 +4,12 @@ import { useProducts, useTheme, useCart, useCartDispatch } from "../../context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import "../../styles/ProductDetail.css";
-import { Footer, Header, ProductCard } from ".."; // Import ProductCard or any component to display related products
+import { Footer, Header, ProductCard } from "..";
 
 function ProductDetail() {
   const { productId } = useParams();
   const products = useProducts();
-  const { isDarkMode } = useTheme(); // Get the current theme
+  const { isDarkMode } = useTheme();
   const cartContext = useCart();
   const cartDispatch = useCartDispatch();
 
@@ -45,12 +45,10 @@ function ProductDetail() {
     }
   }, [productId, products, checkIfInCart, cartContext.cart]);
 
-  // Check if the product is still loading
   if (product === null) {
     return <div className="loading-container">Loading...</div>;
   }
 
-  // Check if the product is not found
   if (!product) {
     return <div className="not-found-message">Product not found.</div>;
   }
@@ -82,12 +80,16 @@ function ProductDetail() {
     }
   };
 
-  // Filter related products based on the category of the current product
-  const relatedProducts = products.filter(
-    (relatedProduct) =>
-      relatedProduct.category === product.category &&
-      relatedProduct.id !== product.id
-  );
+  const relatedProducts = products
+    .filter(
+      (relatedProduct) =>
+        relatedProduct.category === product.category &&
+        relatedProduct.id !== product.id
+    )
+    .filter(
+      (relatedProduct) =>
+        !cartContext.cart.some((item) => item.product.id === relatedProduct.id)
+    );
 
   return (
     <div className="product-detail">
@@ -220,7 +222,6 @@ function ProductDetail() {
         </div>
       </div>
 
-      {/* Related Products Section */}
       <div className="related-products">
         <h2>Related Products</h2>
         <div className="related-products-container">
